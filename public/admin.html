@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Site Vitrine</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <h1>Connexion Admin</h1>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Mot de passe</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Se connecter</button>
+                <div class="form-message" id="loginMessage"></div>
+            </form>
+            <div class="login-info">
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel" style="display: none;">
+        <!-- Admin Header -->
+        <header class="admin-header">
+            <div class="container">
+                <h1>Panneau d'Administration</h1>
+                <div class="admin-actions">
+                    <a href="index.html" class="btn btn-secondary">Voir le site</a>
+                    <button id="logoutBtn" class="btn btn-danger">Déconnexion</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Admin Navigation -->
+        <nav class="admin-nav">
+            <div class="container">
+                <button class="admin-nav-btn active" data-tab="carousel">Carrousel</button>
+                <button class="admin-nav-btn" data-tab="about">À Propos</button>
+                <button class="admin-nav-btn" data-tab="services">Services</button>
+                <button class="admin-nav-btn" data-tab="gallery">Galerie</button>
+                <button class="admin-nav-btn" data-tab="contact">Messages</button>
+                <button class="admin-nav-btn" data-tab="admins">Admins</button>
+            </div>
+        </nav>
+
+        <!-- Admin Content -->
+        <main class="admin-content">
+            <div class="container">
+                <!-- Carousel Tab -->
+                <div id="tab-carousel" class="admin-tab active">
+                    <div class="admin-section-header">
+                        <h2>Gestion du Carrousel</h2>
+                        <button class="btn btn-primary" onclick="openCarouselModal()">Ajouter un slide</button>
+                    </div>
+                    <div id="carouselList" class="admin-list"></div>
+                </div>
+
+                <!-- About Tab -->
+                <div id="tab-about" class="admin-tab">
+                    <div class="admin-section-header">
+                        <h2>Section À Propos</h2>
+                        <button class="btn btn-primary" onclick="openAboutModal()">Modifier</button>
+                    </div>
+                    <div id="aboutContent" class="admin-item-view"></div>
+                </div>
+
+                <!-- Services Tab -->
+                <div id="tab-services" class="admin-tab">
+                    <div class="admin-section-header">
+                        <h2>Gestion des Services</h2>
+                        <button class="btn btn-primary" onclick="openServiceModal()">Ajouter un service</button>
+                    </div>
+                    <div id="servicesList" class="admin-list"></div>
+                </div>
+
+                <!-- Gallery Tab -->
+                <div id="tab-gallery" class="admin-tab">
+                    <div class="admin-section-header">
+                        <h2>Gestion de la Galerie</h2>
+                        <button class="btn btn-primary" onclick="openGalleryModal()">Ajouter une image</button>
+                    </div>
+                    <div id="galleryList" class="admin-grid"></div>
+                </div>
+
+                <!-- Contact Tab -->
+                <div id="tab-contact" class="admin-tab">
+                    <div class="admin-section-header">
+                        <h2>Messages de Contact</h2>
+                    </div>
+                    <div id="contactMessages" class="admin-list"></div>
+                </div>
+
+                <!-- Admins Tab -->
+                <div id="tab-admins" class="admin-tab">
+                    <div class="admin-section-header">
+                        <h2>Gestion des Administrateurs</h2>
+                        <button class="btn btn-primary" onclick="openAdminModal()">Ajouter un admin</button>
+                    </div>
+                    <div id="adminsList" class="admin-list"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Carousel Modal -->
+    <div id="carouselModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('carouselModal')">&times;</span>
+            <h2 id="carouselModalTitle">Ajouter un slide</h2>
+            <form id="carouselForm" enctype="multipart/form-data">
+                <input type="hidden" id="carouselId">
+                <div class="form-group">
+                    <label for="carouselTitle">Titre *</label>
+                    <input type="text" id="carouselTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="carouselDescription">Description</label>
+                    <textarea id="carouselDescription" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="carouselImage">Image</label>
+                    <input type="file" id="carouselImage" accept="image/*">
+                    <div id="carouselImagePreview" class="image-preview"></div>
+                </div>
+                <div class="form-group">
+                    <label for="carouselLink">Lien (optionnel)</label>
+                    <input type="url" id="carouselLink">
+                </div>
+                <div class="form-group">
+                    <label for="carouselOrder">Ordre</label>
+                    <input type="number" id="carouselOrder" value="0">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="carouselVisible" checked>
+                        Visible
+                    </label>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('carouselModal')">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div id="aboutModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('aboutModal')">&times;</span>
+            <h2>Modifier À Propos</h2>
+            <form id="aboutForm">
+                <input type="hidden" id="aboutId">
+                <div class="form-group">
+                    <label for="aboutTitle">Titre *</label>
+                    <input type="text" id="aboutTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="aboutDescription">Description *</label>
+                    <textarea id="aboutDescription" rows="5" required></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('aboutModal')">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Service Modal -->
+    <div id="serviceModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('serviceModal')">&times;</span>
+            <h2 id="serviceModalTitle">Ajouter un service</h2>
+            <form id="serviceForm" enctype="multipart/form-data">
+                <input type="hidden" id="serviceId">
+                <div class="form-group">
+                    <label for="serviceTitle">Titre *</label>
+                    <input type="text" id="serviceTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="serviceDescription">Description *</label>
+                    <textarea id="serviceDescription" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="serviceImage">Image</label>
+                    <input type="file" id="serviceImage" accept="image/*">
+                    <div id="serviceImagePreview" class="image-preview"></div>
+                </div>
+                <div class="form-group">
+                    <label for="servicePrice">Prix</label>
+                    <input type="text" id="servicePrice" placeholder="Ex: À partir de 99€">
+                </div>
+                <div class="form-group">
+                    <label for="serviceOrder">Ordre</label>
+                    <input type="number" id="serviceOrder" value="0">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="serviceVisible" checked>
+                        Visible
+                    </label>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('serviceModal')">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Gallery Modal -->
+    <div id="galleryModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('galleryModal')">&times;</span>
+            <h2>Ajouter une image à la galerie</h2>
+            <form id="galleryForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="galleryTitle">Titre</label>
+                    <input type="text" id="galleryTitle">
+                </div>
+                <div class="form-group">
+                    <label for="galleryDescription">Description</label>
+                    <textarea id="galleryDescription" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="galleryImage">Image *</label>
+                    <input type="file" id="galleryImage" accept="image/*" required>
+                    <div id="galleryImagePreview" class="image-preview"></div>
+                </div>
+                <div class="form-group">
+                    <label for="galleryOrder">Ordre</label>
+                    <input type="number" id="galleryOrder" value="0">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="galleryVisible" checked>
+                        Visible
+                    </label>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('galleryModal')">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Modal -->
+    <div id="adminModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('adminModal')">&times;</span>
+            <h2>Ajouter un administrateur</h2>
+            <form id="adminForm">
+                <div class="form-group">
+                    <label for="adminName">Nom *</label>
+                    <input type="text" id="adminName" required>
+                </div>
+                <div class="form-group">
+                    <label for="adminEmail">Email *</label>
+                    <input type="email" id="adminEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Mot de passe *</label>
+                    <input type="password" id="adminPassword" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Créer</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('adminModal')">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
